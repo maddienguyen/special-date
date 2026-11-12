@@ -6,39 +6,21 @@
   <title>ULTRAKILL DATE PROTOCOL // SAHIL & MADDIE</title>
   <link rel="stylesheet" href="css/ultrakill.css" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
 
   <!-- ============================================================
-       ULTRAKILL ELEVATOR DESCENT & LEVEL INTRO (YOUTUBE: 02Ul1TGR9hI)
+       ULTRAKILL ELEVATOR DESCENT & LEVEL INTRO (LOCAL MP4)
   ============================================================ -->
   <div id="elevator-intro-overlay">
 
-    <!-- Prompt screen to trigger user interaction for audio autoplay -->
-    <div id="descent-prompt" class="descent-prompt-screen">
-      <div class="uk-badge-gold">TERMINAL TELEMETRY // ELEVATOR SHAFT 0-1</div>
-      <h1 class="uk-title-large" style="font-size:clamp(2.2rem,6vw,4.5rem); margin: 0.6rem 0 0.8rem;">
-        INITIALIZE <span style="color:var(--uk-red);">DESCENT</span>
-      </h1>
-      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); max-width: 580px; margin-bottom: 2rem; font-size: 1.05rem; line-height: 1.6;">
-        Hellevator sequence loaded for Sahil. Click anywhere to drop down the shaft, land at terminal velocity, and enter the level.
-      </p>
-      <button id="start-descent-btn" class="uk-btn uk-btn-gold" style="font-size: 1.25rem; padding: 1.1rem 3rem;">
-        🔻 DROP INTO HELL 🔻
-      </button>
-      <div style="font-family: var(--font-mono); font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 1.5rem; letter-spacing: 0.1em;">
-        [SPACEBAR OR CLICK ANYWHERE TO START]
-      </div>
-    </div>
-
-    <!-- YouTube Video Container (Secret Elevator Falling Perfect Loop) -->
+    <!-- Native Local Video Player (100% Offline, Zero YouTube Errors) -->
     <div class="elevator-video-container" id="elevator-video-container">
-      <div id="youtube-elevator-player"></div>
+      <video id="elevator-video" src="assets/elevator.mp4" autoplay loop muted playsinline preload="auto"></video>
     </div>
 
     <!-- In-Game Elevator Telemetry HUD -->
-    <div class="elevator-hud" id="elevator-hud" style="display:none;">
+    <div class="elevator-hud" id="elevator-hud">
       <div class="elevator-telemetry-top">
         <div>
           <div style="letter-spacing:0.18em;font-weight:bold;color:var(--uk-cyan);">SHAFT: 0-1 // HELL DESCENT</div>
@@ -51,11 +33,11 @@
       </div>
 
       <div class="elevator-prompt-bottom">
-        <button id="land-now-btn" class="uk-btn uk-btn-red" style="font-size:0.85rem;padding:0.6rem 1.4rem;">
+        <button id="land-now-btn" class="uk-btn uk-btn-red" style="font-size:0.9rem;padding:0.7rem 1.6rem;">
           💥 LAND &amp; SLIDE IN [SPACE]
         </button>
         <div id="elevator-countdown" style="font-size:0.9rem;color:var(--uk-yellow);font-weight:bold;">
-          LANDING IN: <span id="countdown-sec">6</span>S
+          AUTO-LANDING IN: <span id="countdown-sec">5</span>S
         </div>
         <button id="skip-intro-btn" class="uk-btn uk-btn-secondary" style="font-size:0.85rem;padding:0.6rem 1.2rem;">
           SKIP INTRO ⏭
@@ -349,18 +331,15 @@
 
     // ============================================================
     // ULTRAKILL ELEVATOR DESCENT & LANDING SEQUENCE
-    // Video: https://youtu.be/02Ul1TGR9hI (Secret Elevator Falling)
+    // Video: assets/elevator.mp4 (Offline Local Video - Zero Error 153)
     // ============================================================
-    let ytPlayer = null;
-    let descentStarted = false;
     let landingTriggered = false;
     let telemetryInterval = null;
     let countdownInterval = null;
-    let countdownSeconds = 6;
+    let countdownSeconds = 5;
 
     const overlay = document.getElementById('elevator-intro-overlay');
-    const descentPrompt = document.getElementById('descent-prompt');
-    const startDescentBtn = document.getElementById('start-descent-btn');
+    const elevatorVideo = document.getElementById('elevator-video');
     const elevatorHud = document.getElementById('elevator-hud');
     const doorLeft = document.getElementById('door-left');
     const doorRight = document.getElementById('door-right');
@@ -372,57 +351,14 @@
     const speedDisplay = document.getElementById('elevator-speed');
     const countdownSecDisplay = document.getElementById('countdown-sec');
 
-    // YouTube Iframe API setup
-    window.onYouTubeIframeAPIReady = function() {
-      ytPlayer = new YT.Player('youtube-elevator-player', {
-        videoId: '02Ul1TGR9hI',
-        playerVars: {
-          autoplay: 1,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
-          modestbranding: 1,
-          rel: 0,
-          loop: 1,
-          playlist: '02Ul1TGR9hI',
-          mute: 1, // Start muted for autoplay approval, unmutes on user interaction
-          playsinline: 1
-        },
-        events: {
-          onReady: (event) => {
-            event.target.playVideo();
-          }
-        }
-      });
-    };
-
-    function startDescent() {
-      if (descentStarted) return;
-      descentStarted = true;
-
-      // Unmute YouTube player & play
-      if (ytPlayer && typeof ytPlayer.unMute === 'function') {
-        ytPlayer.unMute();
-        ytPlayer.playVideo();
-      }
-
-      // Audio cue
-      if (window.soundFx) {
-        window.soundFx.playIntro();
-      }
-
-      // Hide prompt and reveal HUD
-      descentPrompt.classList.add('fade-out');
-      elevatorHud.style.display = 'flex';
-
-      // Animate velocity
+    // Start descent telemetry immediately upon page load (NO VOICELINES)
+    function initDescentTelemetry() {
       let currentVelocity = -220;
       telemetryInterval = setInterval(() => {
         currentVelocity -= Math.floor(Math.random() * 8) - 3;
-        speedDisplay.textContent = `${currentVelocity} M/S`;
+        if (speedDisplay) speedDisplay.textContent = `${currentVelocity} M/S`;
       }, 150);
 
-      // Countdown to automatic landing
       countdownInterval = setInterval(() => {
         countdownSeconds--;
         if (countdownSecDisplay) {
@@ -435,6 +371,8 @@
       }, 1000);
     }
 
+    initDescentTelemetry();
+
     function landElevator() {
       if (landingTriggered) return;
       landingTriggered = true;
@@ -442,47 +380,42 @@
       clearInterval(telemetryInterval);
       clearInterval(countdownInterval);
 
-      elevatorHud.style.display = 'none';
+      if (elevatorHud) elevatorHud.style.display = 'none';
 
-      // 1. Elevator Doors SLAM SHUT for impact
-      doorLeft.style.transform = 'translateX(0)';
-      doorRight.style.transform = 'translateX(0)';
+      // 1. Elevator doors slam shut for impact
+      if (doorLeft) doorLeft.style.transform = 'translateX(0)';
+      if (doorRight) doorRight.style.transform = 'translateX(0)';
 
-      // Heavy impact sounds
+      // Impact sound effects only (NO VOICELINES)
       if (window.soundFx) {
         window.soundFx.playParry();
         setTimeout(() => window.soundFx.playExplosion(), 120);
       }
 
       // Violent Screen Shake
-      overlay.classList.add('screen-impact');
+      if (overlay) overlay.classList.add('screen-impact');
 
       setTimeout(() => {
-        // 2. Elevator doors slide open into the level!
-        doorLeft.style.transform = 'translateX(-100%)';
-        doorRight.style.transform = 'translateX(100%)';
+        // 2. Elevator doors slide open into the level arena
+        if (doorLeft) doorLeft.style.transform = 'translateX(-100%)';
+        if (doorRight) doorRight.style.transform = 'translateX(100%)';
 
-        // Camera walks / slides into the homepage arena
+        // Camera walks / slides into the homepage level
         if (mainContent) {
           mainContent.classList.add('walk-in-effect');
         }
 
-        // 3. Level Title Card SLAMS in
+        // 3. Level Title Card slams into view (NO VOICELINE)
         if (titleCard) {
           titleCard.classList.add('visible');
         }
-        if (window.soundFx) {
-          setTimeout(() => window.soundFx.playBehold(), 300);
-        }
 
-        // 4. Fade title card and reveal interactive level homepage
+        // 4. Fade title card away and reveal the interactive level hub
         setTimeout(() => {
           if (titleCard) titleCard.classList.remove('visible');
-          overlay.classList.add('hidden');
-          if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
-            ytPlayer.pauseVideo();
-          }
-        }, 2700);
+          if (overlay) overlay.classList.add('hidden');
+          if (elevatorVideo) elevatorVideo.pause();
+        }, 2500);
 
       }, 650);
     }
@@ -491,52 +424,48 @@
       clearInterval(telemetryInterval);
       clearInterval(countdownInterval);
       landingTriggered = true;
-      descentStarted = true;
-      overlay.classList.add('hidden');
-      if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') {
-        ytPlayer.pauseVideo();
-      }
+      if (overlay) overlay.classList.add('hidden');
+      if (elevatorVideo) elevatorVideo.pause();
       if (window.soundFx) window.soundFx.playTerminalBeep();
     }
 
     // Event listeners
-    if (startDescentBtn) startDescentBtn.addEventListener('click', startDescent);
-    if (descentPrompt) descentPrompt.addEventListener('click', startDescent);
     if (landNowBtn) landNowBtn.addEventListener('click', landElevator);
     if (skipIntroBtn) skipIntroBtn.addEventListener('click', skipIntro);
 
-    // Keyboard Spacebar listener
+    // Keyboard Spacebar listener to land
     window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' && !landingTriggered) {
+      if (e.code === 'Space' && !landingTriggered && e.target.tagName !== 'INPUT') {
         e.preventDefault();
-        if (!descentStarted) {
-          startDescent();
-        } else {
-          landElevator();
-        }
+        landElevator();
       }
     });
 
     // Replay Descent button in HUD
     if (replayDescentBtn) {
       replayDescentBtn.addEventListener('click', () => {
-        descentStarted = false;
         landingTriggered = false;
-        countdownSeconds = 6;
+        countdownSeconds = 5;
         if (countdownSecDisplay) countdownSecDisplay.textContent = countdownSeconds;
 
-        overlay.classList.remove('hidden');
-        overlay.classList.remove('screen-impact');
-        descentPrompt.classList.remove('fade-out');
-        elevatorHud.style.display = 'none';
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          overlay.classList.remove('screen-impact');
+        }
+        if (elevatorHud) elevatorHud.style.display = 'flex';
 
-        doorLeft.style.transform = 'translateX(-100%)';
-        doorRight.style.transform = 'translateX(100%)';
+        if (doorLeft) doorLeft.style.transform = 'translateX(-100%)';
+        if (doorRight) doorRight.style.transform = 'translateX(100%)';
 
         if (titleCard) titleCard.classList.remove('visible');
         if (mainContent) mainContent.classList.remove('walk-in-effect');
 
-        startDescent();
+        if (elevatorVideo) {
+          elevatorVideo.currentTime = 0;
+          elevatorVideo.play().catch(() => {});
+        }
+
+        initDescentTelemetry();
       });
     }
   </script>

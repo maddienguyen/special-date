@@ -741,14 +741,11 @@ body {
   background: #000;
 }
 
-.elevator-video-container iframe {
+.elevator-video-container video {
   width: 100vw;
-  height: 56.25vw;
-  min-height: 100vh;
-  min-width: 177.77vh;
+  height: 100vh;
+  object-fit: cover;
   pointer-events: none;
-  transform: scale(1.35);
-  border: none;
 }
 
 /* Elevator Telemetry HUD */
