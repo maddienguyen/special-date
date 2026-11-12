@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAGE 04 // IRON MAN 2 &bull; STARK PROTOCOL</title>
+  <link rel="stylesheet" href="css/ironman.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body class="ironman-page">
+
+  <!-- Audio element for optional background music -->
+  <audio id="bgm-audio" loop preload="auto">
+    <source src="assets/Notion.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Stark Blueprint grid & Hologram scanline overlay -->
+  <div class="ironman-bg"></div>
+  <div class="hologram-overlay"></div>
+
+  <!-- Stark Industries Navigation Header -->
+  <header class="im-header">
+    <div class="im-nav-container">
+      <a href="index.html" class="im-brand">
+        <span class="im-brand-badge">STARK-TECH</span>
+        <span class="im-brand-title">STARK <span>INDUSTRIES</span> // HUD</span>
+      </a>
+
+      <!-- Stark Navigation Links -->
+      <nav class="im-nav-links">
+        <a href="index.html" class="im-nav-link back-to-uk">← [00] ULTRAKILL HUB</a>
+        <a href="mission1-ultrakill.html" class="im-nav-link back-to-uk">[01] DUEL</a>
+        <a href="mission2-visionboard.html" class="im-nav-link back-to-uk">[02] CANVA</a>
+        <a href="mission3-anime.html" class="im-nav-link back-to-uk">[03] ANIME</a>
+        <a href="mission4-ironman.html" class="im-nav-link active">★ [04] IRON MAN 2</a>
+      </nav>
+
+      <!-- Audio controls -->
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <button id="mute-toggle-btn" class="im-btn im-btn-cyan" style="font-size: 0.75rem; padding: 0.35rem 0.8rem;">
+          [AUDIO: ON]
+        </button>
+        <button id="bgm-toggle-btn" class="im-btn im-btn-cyan" style="font-size: 0.75rem; padding: 0.35rem 0.8rem;">
+          [BGM: PAUSED]
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="im-container">
+
+    <!-- Mission Header in Hot-Rod Crimson & Stark Gold -->
+    <div class="im-badge">STARK PROTOCOL 3000 // THE COZY GRAND FINALE</div>
+    <h1 class="im-title-large">
+      IRON MAN 2 <span>MOVIE NIGHT</span>
+    </h1>
+    <p class="im-subtitle">
+      After beating Hell's legions in ULTRAKILL, drafting our dream life on Canva, and rolling anime fate, we power down into the coziest finale imaginable: snuggling together to watch <strong>Iron Man 2</strong> with popcorn, blankets, and pure Tony Stark swagger.
+    </p>
+
+    <!-- Interactive Arc Reactor Centerpiece -->
+    <div class="arc-reactor-wrap">
+      <div class="arc-reactor" id="arc-reactor-btn" title="Click to charge Arc Reactor!">
+        <div class="arc-outer-ring"></div>
+        <div class="arc-inner-triangle"></div>
+      </div>
+      <div class="arc-status-text" id="arc-power-label">
+        ARC REACTOR CORE: 100% PALLADIUM OPTIMAL (CLICK TO OVERCHARGE)
+      </div>
+    </div>
+
+    <!-- JARVIS System Interface -->
+    <section class="im-panel">
+      <div class="jarvis-box">
+        <div class="jarvis-header">
+          <span>J.A.R.V.I.S. // DATE PROTOCOL V2.0</span>
+          <span>LOCATION: COUCH &bull; CLASSIFIED</span>
+        </div>
+        <p style="font-size: 1.15rem; color: #fff; margin-bottom: 0.8rem; font-style: italic;">
+          "Good evening, Mr. Sahil and Ms. Maddie. Tony Stark Date Protocol 3000 is officially online."
+        </p>
+        <p style="color: var(--im-text-muted); font-size: 0.95rem; line-height: 1.6;">
+          "I have calibrated the blanket thermals, scanned local snack inventories, and prepared our Mark IV &amp; Mark V armor systems. Today's objective: relax, curl up side-by-side, and enjoy Robert Downey Jr. flying through Randy's Donuts in full titanium alloy."
+        </p>
+      </div>
+    </section>
+
+    <!-- Movie Dossier & Highlights Grid -->
+    <section class="im-panel" style="border-left-color: var(--im-gold);">
+      <div class="im-badge">CINEMATIC DOSSIER // MISSION PARAMETERS</div>
+      <h2 style="font-family: var(--font-stark); font-size: 1.8rem; color: #fff; margin-bottom: 0.5rem;">
+        WHY IRON MAN 2 HITS DIFFERENT
+      </h2>
+      <p style="color: var(--im-text-muted); font-size: 0.95rem;">
+        The hypest moments we get to enjoy together:
+      </p>
+
+      <div class="im-feature-grid">
+
+        <div class="im-feature-card">
+          <div class="im-feature-icon">💼</div>
+          <h3 class="im-feature-title">THE SUITCASE ARMOR (MARK V)</h3>
+          <p class="im-feature-desc">
+            The legendary Monaco Grand Prix scene where Tony steps onto the briefcase and it folds up around him while Ivan Vanko whips electricity across the racetrack. Pure peak Marvel!
+          </p>
+        </div>
+
+        <div class="im-feature-card">
+          <div class="im-feature-icon">⚡</div>
+          <h3 class="im-feature-title">WAR MACHINE UNLEASHED</h3>
+          <p class="im-feature-desc">
+            Colonel James Rhodes stepping into the Mark II, getting equipped by Justin Hammer with miniguns and the infamous 'Ex-Wife' bunker buster missile.
+          </p>
+        </div>
+
+        <div class="im-feature-card">
+          <div class="im-feature-icon">🕷️</div>
+          <h3 class="im-feature-title">BLACK WIDOW DEBUT</h3>
+          <p class="im-feature-desc">
+            Natasha Romanoff infiltrating Hammer Industries and single-handedly dismantling an entire hallway of armed security guards with acrobatic flair while Happy struggles with one guy.
+          </p>
+        </div>
+
+        <div class="im-feature-card">
+          <div class="im-feature-icon">🍩</div>
+          <h3 class="im-feature-title">RANDY'S DONUTS HANGOUT</h3>
+          <p class="im-feature-desc">
+            Tony Stark casually sitting inside the giant rooftop donut eating pastries in his suit until Nick Fury tells him to get down. The ultimate mood!
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Movie Night Checklist -->
+    <section class="im-panel" style="border-left-color: var(--im-red);">
+      <div class="im-badge">PRE-FLIGHT CHECKLIST // MOVIE ESSENTIALS</div>
+      <h2 style="font-family: var(--font-stark); font-size: 1.8rem; color: #fff; margin-bottom: 0.5rem;">
+        OUR IRON MAN DATE PROTOCOL
+      </h2>
+      <p style="color: var(--im-text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+        Click any task to verify readiness with JARVIS:
+      </p>
+
+      <ul class="im-checklist">
+        <li onclick="toggleChecklist(this)">Fresh hot buttery popcorn with seasoned toppings ready to munch</li>
+        <li onclick="toggleChecklist(this)">Tony Stark approved snacks (Cheeseburgers, sweet treats, milkshakes or iced soda)</li>
+        <li onclick="toggleChecklist(this)">Coziest blankets layered on the sofa for maximum snuggling</li>
+        <li onclick="toggleChecklist(this)">Room lighting set to cinema ambient glow</li>
+        <li onclick="toggleChecklist(this)">HDMI or streaming audio set to crisp bass levels for the repulsor sound effects</li>
+        <li onclick="toggleChecklist(this)">Cuddled up close and holding hands during the final Expo battle</li>
+      </ul>
+
+      <!-- Action Buttons -->
+      <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button id="repulsor-btn" class="im-btn">
+          💥 TEST REPULSOR BLAST
+        </button>
+        <button id="love-3000-btn" class="im-btn im-btn-cyan">
+          ❤️ LOVE YOU 3000, SAHIL
+        </button>
+      </div>
+    </section>
+
+    <!-- Return to Hub -->
+    <div style="margin-top: 3.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a href="mission3-anime.html" class="im-btn im-btn-cyan">
+        ← BACK TO STAGE 03 (ANIME WHEEL)
+      </a>
+      <a href="index.html" class="im-btn" style="background: linear-gradient(135deg, #ffd700, #b8860b); color: #000; border-color: #fff;">
+        RETURN TO ULTRAKILL DATE HUB 🏠 →
+      </a>
+    </div>
+
+    <!-- Stark Footer -->
+    <footer style="margin-top: 4rem; text-align: center; font-family: var(--font-hud); font-size: 0.9rem; color: var(--im-text-muted); border-top: 1px solid var(--im-border); padding-top: 1.5rem;">
+      <p>STARK INDUSTRIES &bull; JARVIS DATE SUBSYSTEM &bull; CRAFTED EXCLUSIVELY FOR SAHIL BY MADDIE</p>
+      <p style="color: var(--im-gold-bright); margin-top: 0.3rem;">"I LOVE YOU 3,000."</p>
+    </footer>
+
+  </main>
+
+  <script src="js/sounds.js"></script>
+  <script>
+    // Audio and BGM setup
+    const muteBtn = document.getElementById('mute-toggle-btn');
+    const bgmBtn = document.getElementById('bgm-toggle-btn');
+    const bgmAudio = document.getElementById('bgm-audio');
+
+    if (bgmAudio && window.soundFx) {
+      window.soundFx.setupBgm('bgm-audio');
+    }
+
+    function updateMuteBtn() {
+      if (!muteBtn || !window.soundFx) return;
+      muteBtn.textContent = window.soundFx.isMuted() ? '[AUDIO: OFF]' : '[AUDIO: ON]';
+    }
+
+    function updateBgmBtn() {
+      if (!bgmBtn || !window.soundFx) return;
+      bgmBtn.textContent = window.soundFx.bgmPlaying ? '[BGM: PLAYING]' : '[BGM: PAUSED]';
+    }
+
+    if (muteBtn) {
+      updateMuteBtn();
+      muteBtn.addEventListener('click', () => {
+        window.soundFx.toggleMute();
+        updateMuteBtn();
+        if (!window.soundFx.isMuted()) window.soundFx.playArcReactorHum();
+      });
+    }
+
+    if (bgmBtn) {
+      updateBgmBtn();
+      bgmBtn.addEventListener('click', () => {
+        window.soundFx.toggleBgm();
+        updateBgmBtn();
+      });
+    }
+
+    // Arc Reactor Interactivity
+    const arcReactor = document.getElementById('arc-reactor-btn');
+    const arcLabel = document.getElementById('arc-power-label');
+    let overchargeCount = 0;
+
+    arcReactor.addEventListener('click', () => {
+      overchargeCount++;
+      if (window.soundFx) window.soundFx.playArcReactorHum();
+
+      arcReactor.style.transform = 'scale(1.15)';
+      arcReactor.style.boxShadow = '0 0 80px #00f0ff, 0 0 40px #ffd700';
+
+      const powerLevels = [
+        'ARC REACTOR OVERCHARGED: 300% MAXIMUM POWER! ⚡',
+        'NEW ELEMENT SYNTHESIZED: BADASSIUM DETECTED! 💎',
+        'UNIBEAM ONLINE: READY TO FIRE! 💥',
+        'LOVE OUTPUT LEVEL: OVER 9,000 &bull; FOREVER YOURS! ❤️'
+      ];
+
+      arcLabel.textContent = powerLevels[overchargeCount % powerLevels.length];
+      arcLabel.style.color = '#ffd700';
+
+      setTimeout(() => {
+        arcReactor.style.transform = 'scale(1)';
+        arcReactor.style.boxShadow = '';
+      }, 500);
+    });
+
+    // Repulsor blast button
+    const repulsorBtn = document.getElementById('repulsor-btn');
+    repulsorBtn.addEventListener('click', () => {
+      if (window.soundFx) window.soundFx.playRepulsor();
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.7 },
+        colors: ['#00f0ff', '#ffd700', '#d1121f']
+      });
+    });
+
+    // Love you 3000 button
+    const loveBtn = document.getElementById('love-3000-btn');
+    loveBtn.addEventListener('click', () => {
+      if (window.soundFx) window.soundFx.playPRankFanfare();
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 },
+        colors: ['#ffd700', '#d1121f', '#ff1a2d', '#ffffff']
+      });
+      alert("Sahil, you're my favorite superhero in the entire multiverse. Love you 3000! ❤️");
+    });
+
+    // Checklist toggler
+    function toggleChecklist(item) {
+      item.classList.toggle('checked');
+      if (window.soundFx) window.soundFx.playTerminalBeep();
+    }
+  </script>
+</body>
+</html>

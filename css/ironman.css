@@ -1,0 +1,448 @@
+/* ============================================================
+   IRON MAN 2 THEME STYLESHEET (EXCLUSIVE TO MISSION 4)
+   Aesthetic: Stark Industries, JARVIS Holographic HUD, 
+   Hot-Rod Crimson & Titanium Gold, Glowing Arc Reactor Cyan.
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Montserrat:wght@400;600;700&display=swap');
+
+:root {
+  --im-bg: #08090d;
+  --im-bg-panel: #11141f;
+  --im-bg-card: rgba(18, 22, 34, 0.92);
+  --im-border: #3b2226;
+  --im-border-bright: #9e1f29;
+
+  --im-red: #d1121f;
+  --im-red-dark: #7a0008;
+  --im-red-glow: rgba(209, 18, 31, 0.55);
+
+  --im-gold: #f5b800;
+  --im-gold-bright: #ffd700;
+  --im-gold-glow: rgba(245, 184, 0, 0.5);
+
+  --im-arc: #00f0ff;
+  --im-arc-glow: rgba(0, 240, 255, 0.7);
+
+  --im-text: #f8faff;
+  --im-text-muted: #9aa8c2;
+
+  --font-stark: 'Orbitron', sans-serif;
+  --font-hud: 'Rajdhani', sans-serif;
+  --font-clean: 'Montserrat', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--im-bg);
+}
+
+body.ironman-page {
+  font-family: var(--font-clean);
+  background-color: var(--im-bg);
+  color: var(--im-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+}
+
+/* Background Stark Blueprint & Hologram */
+.ironman-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(209, 18, 31, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(245, 184, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 65%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+    linear-gradient(rgba(8, 9, 13, 0.95), rgba(8, 9, 13, 0.98)),
+    repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(209, 18, 31, 0.06) 49px, rgba(209, 18, 31, 0.06) 50px),
+    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(209, 18, 31, 0.06) 49px, rgba(209, 18, 31, 0.06) 50px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+}
+
+/* Hologram Scan Grid */
+.hologram-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(rgba(0, 240, 255, 0) 50%, rgba(0, 240, 255, 0.03) 50%);
+  background-size: 100% 3px;
+  opacity: 0.5;
+}
+
+/* Header */
+.im-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 11, 16, 0.94);
+  border-bottom: 2px solid var(--im-gold);
+  backdrop-filter: blur(14px);
+  padding: 0.6rem 1.2rem;
+  box-shadow: 0 4px 25px rgba(209, 18, 31, 0.3);
+}
+
+.im-nav-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.im-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  text-decoration: none;
+  color: var(--im-text);
+}
+
+.im-brand-badge {
+  background: linear-gradient(135deg, var(--im-red), var(--im-red-dark));
+  color: var(--im-gold-bright);
+  font-family: var(--font-stark);
+  font-weight: 900;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.65rem;
+  letter-spacing: 0.15em;
+  border: 1px solid var(--im-gold);
+  box-shadow: 0 0 10px var(--im-gold-glow);
+}
+
+.im-brand-title {
+  font-family: var(--font-stark);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #fff;
+}
+.im-brand-title span {
+  color: var(--im-gold-bright);
+  text-shadow: 0 0 12px var(--im-gold-glow);
+}
+
+/* Nav links in Stark theme */
+.im-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.im-nav-link {
+  font-family: var(--font-hud);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--im-text-muted);
+  padding: 0.4rem 0.85rem;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.im-nav-link:hover, .im-nav-link.active {
+  color: var(--im-gold-bright);
+  border-color: var(--im-gold);
+  background: rgba(245, 184, 0, 0.12);
+  box-shadow: 0 0 14px var(--im-gold-glow);
+}
+
+.im-nav-link.back-to-uk {
+  color: #00f0ff;
+  border-color: rgba(0, 240, 255, 0.3);
+}
+.im-nav-link.back-to-uk:hover {
+  background: rgba(0, 240, 255, 0.15);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
+}
+
+/* ============================================================
+   ARC REACTOR COMPONENT
+============================================================ */
+.arc-reactor-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem 0 2rem;
+  position: relative;
+}
+
+.arc-reactor {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #021a22 0%, #07090f 70%);
+  border: 4px solid var(--im-gold);
+  box-shadow: 0 0 35px var(--im-arc-glow), inset 0 0 25px var(--im-arc-glow);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.arc-reactor:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 60px var(--im-arc-glow), 0 0 30px var(--im-gold-glow), inset 0 0 35px var(--im-arc-glow);
+}
+
+.arc-outer-ring {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 240, 255, 0.7);
+  animation: rotateRing 14s linear infinite;
+}
+
+.arc-inner-triangle {
+  width: 50px;
+  height: 50px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background: linear-gradient(180deg, var(--im-arc), #ffffff);
+  box-shadow: 0 0 25px var(--im-arc);
+  animation: pulseArc 2.5s infinite ease-in-out;
+}
+
+.arc-status-text {
+  font-family: var(--font-hud);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--im-arc);
+  text-shadow: 0 0 10px var(--im-arc-glow);
+  margin-top: 0.8rem;
+  text-transform: uppercase;
+}
+
+@keyframes rotateRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseArc {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); filter: brightness(1.3); }
+}
+
+/* ============================================================
+   STARK PANELS & HUD CARDS
+============================================================ */
+.im-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 6rem;
+  position: relative;
+  z-index: 10;
+}
+
+.im-panel {
+  background: var(--im-bg-card);
+  border: 1px solid var(--im-border);
+  position: relative;
+  padding: 2.2rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(12px);
+  border-left: 4px solid var(--im-red);
+}
+
+.im-panel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--im-gold);
+  box-shadow: 0 0 10px var(--im-gold-glow);
+}
+
+.im-badge {
+  display: inline-block;
+  font-family: var(--font-stark);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0.3rem 0.8rem;
+  margin-bottom: 0.8rem;
+  background: rgba(209, 18, 31, 0.2);
+  border: 1px solid var(--im-red);
+  color: var(--im-gold-bright);
+}
+
+.im-title-large {
+  font-family: var(--font-stark);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 0 25px rgba(209, 18, 31, 0.4);
+}
+.im-title-large span {
+  color: var(--im-gold);
+}
+
+.im-subtitle {
+  font-family: var(--font-clean);
+  color: var(--im-text-muted);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 800px;
+}
+
+/* Stark Buttons */
+.im-btn {
+  font-family: var(--font-stark);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.9rem 2.2rem;
+  border: 2px solid var(--im-gold);
+  background: linear-gradient(135deg, var(--im-red), var(--im-red-dark));
+  color: var(--im-gold-bright);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 20px rgba(209, 18, 31, 0.5);
+  border-radius: 4px;
+}
+
+.im-btn:hover {
+  background: linear-gradient(135deg, var(--im-gold-bright), #cc8a00);
+  color: #000;
+  box-shadow: 0 0 30px var(--im-gold-glow);
+  transform: translateY(-2px);
+}
+
+.im-btn-cyan {
+  border-color: var(--im-arc);
+  background: rgba(0, 240, 255, 0.12);
+  color: #fff;
+  box-shadow: 0 0 15px var(--im-arc-glow);
+}
+.im-btn-cyan:hover {
+  background: var(--im-arc);
+  color: #000;
+  box-shadow: 0 0 25px var(--im-arc-glow);
+}
+
+/* JARVIS Console Box */
+.jarvis-box {
+  background: #090b12;
+  border: 1px solid var(--im-border-bright);
+  border-left: 3px solid var(--im-arc);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  font-family: var(--font-hud);
+  font-size: 1.05rem;
+  color: #d8e5ff;
+}
+
+.jarvis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--im-arc);
+  font-family: var(--font-stark);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+}
+
+/* Movie Dossier Grid */
+.im-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.im-feature-card {
+  background: rgba(25, 29, 44, 0.7);
+  border: 1px solid rgba(245, 184, 0, 0.25);
+  border-radius: 6px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.im-feature-card:hover {
+  border-color: var(--im-gold);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(245, 184, 0, 0.2);
+}
+
+.im-feature-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.8rem;
+  color: var(--im-gold-bright);
+}
+
+.im-feature-title {
+  font-family: var(--font-stark);
+  font-size: 1.15rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.im-feature-desc {
+  font-size: 0.9rem;
+  color: var(--im-text-muted);
+  line-height: 1.6;
+}
+
+/* Checklist */
+.im-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0;
+}
+
+.im-checklist li {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--im-text);
+  cursor: pointer;
+  user-select: none;
+}
+
+.im-checklist li::before {
+  content: '⚡';
+  position: absolute;
+  left: 0;
+  color: var(--im-gold-bright);
+}
+
+.im-checklist li.checked {
+  text-decoration: line-through;
+  color: var(--im-text-muted);
+}

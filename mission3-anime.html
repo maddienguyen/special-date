@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAGE 03 // ANIME WHEEL OF JUDGEMENT</title>
+  <link rel="stylesheet" href="css/ultrakill.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    /* Wheel Arena Container */
+    .wheel-container {
+      position: relative;
+      width: 360px;
+      height: 360px;
+      margin: 1.5rem auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (min-width: 640px) {
+      .wheel-container {
+        width: 440px;
+        height: 440px;
+      }
+    }
+
+    #anime-wheel-canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), 0 0 10px rgba(255, 0, 60, 0.4);
+      border: 4px solid var(--uk-border-bright);
+    }
+
+    /* Wheel Pointer Indicator */
+    .wheel-pointer {
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-top: 32px solid #ffd700;
+      filter: drop-shadow(0 0 10px #ffd700);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Result Modal / Display Card */
+    .winner-announcement {
+      background: rgba(14, 18, 28, 0.95);
+      border: 2px solid var(--uk-yellow);
+      box-shadow: 0 0 40px rgba(255, 208, 0, 0.3);
+      padding: 2rem;
+      margin-top: 2rem;
+      display: none;
+      animation: modalPop 0.4s ease-out forwards;
+      position: relative;
+    }
+
+    /* Anime Info Cards */
+    .anime-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .anime-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--uk-border-bright);
+      padding: 1.5rem;
+      position: relative;
+      transition: all 0.25s;
+    }
+
+    .anime-card.highlight {
+      border-color: var(--uk-yellow);
+      background: rgba(255, 208, 0, 0.08);
+      box-shadow: 0 0 25px rgba(255, 208, 0, 0.25);
+    }
+
+    .anime-card-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.5rem;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio element for optional background music -->
+  <audio id="bgm-audio" loop preload="auto">
+    <source src="assets/Notion.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Cyber background, scanlines, and vignette -->
+  <div class="cyber-bg"></div>
+  <div class="crt-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- ULTRAKILL Top Navigation / HUD -->
+  <header class="uk-header">
+    <div class="uk-nav-container">
+      <a href="index.html" class="uk-brand">
+        <span class="uk-brand-badge">V1-ROMANCE</span>
+        <span class="uk-brand-title">ULTRA<span>KILL</span> // DATE HUB</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="uk-nav-links">
+        <a href="index.html" class="uk-nav-link">[00] PROPOSAL</a>
+        <a href="mission1-ultrakill.html" class="uk-nav-link">[01] ULTRAKILL DUEL</a>
+        <a href="mission2-visionboard.html" class="uk-nav-link">[02] CANVA BOARD</a>
+        <a href="mission3-anime.html" class="uk-nav-link active">[03] ANIME WHEEL</a>
+        <a href="mission4-ironman.html" class="uk-nav-link ironman-link">★ [04] IRON MAN 2</a>
+      </nav>
+
+      <!-- Audio controls -->
+      <div class="uk-sound-ctrls">
+        <button id="mute-toggle-btn" class="uk-icon-btn">[AUDIO: ON]</button>
+        <button id="bgm-toggle-btn" class="uk-icon-btn">[BGM: PAUSED]</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating ULTRAKILL Style Meter -->
+  <div class="uk-floating-style">
+    <div class="uk-style-rank-badge" id="uk-style-rank">SS</div>
+    <div class="uk-style-name" id="uk-style-name">SSADISTIC</div>
+    <div class="uk-style-points" id="uk-style-pts">STYLE: 3,900 PTS</div>
+  </div>
+
+  <main class="uk-container">
+
+    <!-- Mission Header -->
+    <div class="uk-badge-red">STAGE 03 // FATE &amp; CHANCE</div>
+    <h1 class="uk-title-large">
+      ANIME WHEEL OF <span style="color:var(--uk-red);">JUDGEMENT</span>
+    </h1>
+    <p class="uk-subtitle">
+      No arguments over what to watch — the Wheel of Fate chooses our destiny! Spin the wheel to decide between three legendary sagas: <strong>Black Clover</strong>, <strong>Cyberpunk: Edgerunners</strong>, or <strong>Dragon Ball</strong>, followed by our automatic hype episode generator!
+    </p>
+
+    <!-- The Interactive Wheel -->
+    <section class="uk-panel uk-panel-gold" style="margin-top: 2.5rem; text-align: center;">
+      <div class="uk-badge-gold">TERMINAL RANDOMIZER PROTOCOL</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 0.3rem;">
+        SPIN TO DECIDE OUR EPISODE
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.85rem;">
+        Click below to release the brake and let the wheel spin!
+      </p>
+
+      <!-- Canvas Wheel with Pointer -->
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <canvas id="anime-wheel-canvas" width="600" height="600"></canvas>
+      </div>
+
+      <!-- Spin Controls -->
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem;">
+        <button id="spin-wheel-btn" class="uk-btn uk-btn-gold" style="font-size: 1.15rem; padding: 1rem 2.5rem;">
+          🎡 SPIN THE WHEEL OF FATE!
+        </button>
+      </div>
+    </section>
+
+    <!-- Winner Announcement Box -->
+    <section id="winner-box" class="winner-announcement">
+      <div class="uk-badge-gold">JUDGEMENT PRONOUNCED</div>
+      <h2 id="winner-title" style="font-family: var(--font-heading); font-size: 2.5rem; text-transform: uppercase; color: #fff; margin-bottom: 0.6rem;">
+        CHOSEN ANIME
+      </h2>
+      <p id="winner-desc" style="font-family: var(--font-display); font-size: 1.1rem; color: #dce7ff; max-width: 780px; margin-bottom: 1.5rem; line-height: 1.6;">
+        <!-- Filled by JS -->
+      </p>
+
+      <!-- Recommended Episode Callout -->
+      <div style="background: rgba(0, 0, 0, 0.6); border: 1px solid var(--uk-cyan); padding: 1.2rem; margin-bottom: 1.5rem; text-align: left;">
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--uk-cyan); letter-spacing: 0.1em; margin-bottom: 0.3rem;">
+          SELECTED EPISODE MISSION:
+        </div>
+        <div id="winner-episode-title" style="font-family: var(--font-heading); font-size: 1.35rem; color: #fff; font-weight: bold;">
+          <!-- Filled by JS -->
+        </div>
+        <p id="winner-episode-desc" style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--uk-text-muted); margin-top: 0.4rem;">
+          <!-- Filled by JS -->
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button id="reroll-episode-btn" class="uk-btn uk-btn-secondary">
+          🎲 ROLL ANOTHER EPISODE
+        </button>
+        <button id="respin-btn" class="uk-btn uk-btn-gold">
+          🔄 RE-SPIN WHEEL
+        </button>
+      </div>
+    </section>
+
+    <!-- The 3 Contenders Breakdown -->
+    <section style="margin-top: 3.5rem;">
+      <div class="uk-badge-cyan">FATE CONTENDERS // THE 3 SELECTIONS</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        THE 3 ANIME SHOWDOWNS
+      </h2>
+
+      <div class="anime-card-grid">
+
+        <!-- Black Clover -->
+        <div class="anime-card" id="card-black-clover">
+          <span class="anime-card-badge" style="background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981;">
+            CLOVER KINGDOM // MAGIC KNIGHTS
+          </span>
+          <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem;">
+            BLACK CLOVER
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+            Asta born without magic swinging massive anti-magic broadswords with the chaotic Black Bulls squad! Pure grit, adrenaline, relentless yelling, and legendary fight animations.
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #10b981; border-top: 1px solid var(--uk-border); padding-top: 0.6rem;">
+            <strong>Maddie &amp; Sahil Vibe:</strong> Screaming "NEVER GIVING UP IS MY MAGIC!" while eating snacks.
+          </div>
+        </div>
+
+        <!-- Cyberpunk -->
+        <div class="anime-card" id="card-cyberpunk">
+          <span class="anime-card-badge" style="background: rgba(255, 230, 0, 0.2); color: #ffe600; border: 1px solid #ffe600;">
+            NIGHT CITY // CHROME &amp; EDGE
+          </span>
+          <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem;">
+            CYBERPUNK: EDGERUNNERS
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+            David Martinez and Lucy falling in love amidst the blazing neon chaos of Night City. Sandevistan speed blitzes, Studio Trigger's god-tier art, and heart-wrenching emotional depth.
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #ffe600; border-top: 1px solid var(--uk-border); padding-top: 0.6rem;">
+            <strong>Maddie &amp; Sahil Vibe:</strong> Crying together when "I Really Want to Stay at Your House" starts playing.
+          </div>
+        </div>
+
+        <!-- Dragon Ball -->
+        <div class="anime-card" id="card-dragon-ball">
+          <span class="anime-card-badge" style="background: rgba(255, 102, 0, 0.2); color: #ff6600; border: 1px solid #ff6600;">
+            SUPER SAIYAN // GOD KI
+          </span>
+          <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem;">
+            DRAGON BALL
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.6; margin-bottom: 1rem;">
+            The grandfather of all battle shonen. Goku and Vegeta breaking their limits, charging up earth-shaking Kamehamehas, powering up to Super Saiyan, and pure nostalgic hype!
+          </p>
+          <div style="font-family: var(--font-mono); font-size: 0.8rem; color: #ff6600; border-top: 1px solid var(--uk-border); padding-top: 0.6rem;">
+            <strong>Maddie &amp; Sahil Vibe:</strong> Flexing power levels and arguing whether Goku solos fiction.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Navigation footer -->
+    <div style="margin-top: 3.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a href="mission2-visionboard.html" class="uk-btn uk-btn-secondary">← BACK TO STAGE 02</a>
+      <a href="mission4-ironman.html" class="uk-btn uk-btn-gold" style="border-color:#ffd000;color:#ffd000;">
+        PROCEED TO FINAL STAGE: IRON MAN 2 (STARK PROTOCOL) ★ →
+      </a>
+    </div>
+
+  </main>
+
+  <script src="js/sounds.js"></script>
+  <script src="js/ultrakill.js"></script>
+  <script>
+    // Canvas Spinny Wheel Implementation
+    const canvas = document.getElementById('anime-wheel-canvas');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spin-wheel-btn');
+    const respinBtn = document.getElementById('respin-btn');
+    const rerollEpisodeBtn = document.getElementById('reroll-episode-btn');
+
+    const winnerBox = document.getElementById('winner-box');
+    const winnerTitle = document.getElementById('winner-title');
+    const winnerDesc = document.getElementById('winner-desc');
+    const winnerEpTitle = document.getElementById('winner-episode-title');
+    const winnerEpDesc = document.getElementById('winner-episode-desc');
+
+    // 6 alternating slices for visual excitement
+    const slices = [
+      { name: "Black Clover", key: "black-clover", color: "#064e3b", textColor: "#6ee7b7", border: "#10b981" },
+      { name: "Cyberpunk", key: "cyberpunk", color: "#854d0e", textColor: "#fef08a", border: "#eab308" },
+      { name: "Dragon Ball", key: "dragon-ball", color: "#7c2d12", textColor: "#fdba74", border: "#f97316" },
+      { name: "Black Clover", key: "black-clover", color: "#047857", textColor: "#a7f3d0", border: "#10b981" },
+      { name: "Cyberpunk", key: "cyberpunk", color: "#a16207", textColor: "#fef9c3", border: "#facc15" },
+      { name: "Dragon Ball", key: "dragon-ball", color: "#9a3412", textColor: "#ffedd5", border: "#ea580c" }
+    ];
+
+    const animeDetails = {
+      "black-clover": {
+        title: "BLACK CLOVER ⚔️",
+        desc: "Fate has ruled in favor of Asta and the Black Bulls! Prepare for raw willpower, screaming over magic spells, and some of the most dynamic battle choreography in modern anime.",
+        episodes: [
+          { title: "Episode 100: 'We Won't Lose to You'", desc: "Asta & Yuno team up against Licht in an absolute masterclass of animation and raw teamwork hype." },
+          { title: "Episode 119: 'The Final Attack'", desc: "The climax against the Zagred devil — Yami's Dark Cloaked Dimension Slash and Asta's Black Divider." },
+          { title: "Episode 167: 'Black Oath'", desc: "Asta & Yami fight side-by-side against Dante of the Dark Triad. One of the best episodes in the entire show!" },
+          { title: "Episode 84: 'The Victors'", desc: "Asta vs Langris — Asta loses control and completely dismantles an arrogant noble." },
+          { title: "Episode 170: 'The Faraway Future'", desc: "The emotional anime finale: Liebe's backstory and the devil-binding ritual." }
+        ]
+      },
+      "cyberpunk": {
+        title: "CYBERPUNK: EDGERUNNERS ⚡",
+        desc: "Night City awaits. We're tuning in to Studio Trigger's hyper-stylish, neon-soaked cyberpunk masterpiece with David, Lucy, and Maine.",
+        episodes: [
+          { title: "Episode 1: 'Let You Down'", desc: "David's brutal origin in Santo Domingo and the discovery of the military-grade Sandevistan cyberware." },
+          { title: "Episode 4: 'Lucky You'", desc: "David's full initiation into Maine's crew and high-speed highway action." },
+          { title: "Episode 6: 'Girl on Fire'", desc: "Maine's heartbreaking cyberpsychosis and David taking up the torch of leadership." },
+          { title: "Episode 2: 'Like a Boy'", desc: "The iconic Moon BD sequence where David and Lucy form their unforgettable romantic connection." },
+          { title: "Episode 10: 'My Moon, My Man'", desc: "The legendary final stand at Arasaka Tower. Have tissues ready for 'I Really Want to Stay at Your House'." }
+        ]
+      },
+      "dragon-ball": {
+        title: "DRAGON BALL 🐉",
+        desc: "The timeless champion! Prepare for earth-shattering power levels, charging up ki blasts, and the pinnacle of Saiyan warrior pride.",
+        episodes: [
+          { title: "DBS Ep 130: 'The Greatest Showdown of All Time!'", desc: "Mastered Ultra Instinct Goku vs Full Power Jiren — pure animated cinema." },
+          { title: "DBZ Ep 95: 'Transformed at Last'", desc: "Goku transforms into the legendary Super Saiyan on Namek for the very first time against Frieza." },
+          { title: "DBZ Ep 191: 'Save the World'", desc: "Father-Son Kamehameha: Gohan and spirit Goku overpower Super Perfect Cell." },
+          { title: "DBZ Ep 229: 'Vegeta's Pride'", desc: "Majin Vegeta vs Goku — the greatest emotional and physical rivalry duel." },
+          { title: "DBS Broly Movie (or Fight Scenes)", desc: "Gogeta Blue vs Legendary Super Saiyan Broly shattering dimensions!" }
+        ]
+      }
+    };
+
+    const numSlices = slices.length;
+    const sliceAngle = (2 * Math.PI) / numSlices;
+    let currentAngle = 0;
+    let spinVelocity = 0;
+    let isSpinning = false;
+    let lastSliceIdx = -1;
+    let selectedAnimeKey = "cyberpunk";
+
+    function drawWheel() {
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = centerX - 12;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Outer rim
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius + 8, 0, 2 * Math.PI);
+      ctx.fillStyle = "#111420";
+      ctx.fill();
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = "#ffd000";
+      ctx.stroke();
+
+      for (let i = 0; i < numSlices; i++) {
+        const startA = currentAngle + i * sliceAngle;
+        const endA = startA + sliceAngle;
+        const slice = slices[i];
+
+        // Slice wedge
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startA, endA);
+        ctx.closePath();
+        ctx.fillStyle = slice.color;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = slice.border;
+        ctx.stroke();
+
+        // Label
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(startA + sliceAngle / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = slice.textColor;
+        ctx.font = "bold 24px 'Chakra Petch', sans-serif";
+        ctx.shadowColor = "rgba(0,0,0,0.8)";
+        ctx.shadowBlur = 6;
+        ctx.fillText(slice.name.toUpperCase(), radius - 30, 8);
+        ctx.restore();
+      }
+
+      // Center Hub
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 38, 0, 2 * Math.PI);
+      ctx.fillStyle = "#07080c";
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "#00f0ff";
+      ctx.stroke();
+
+      ctx.font = "bold 16px 'Share Tech Mono', monospace";
+      ctx.fillStyle = "#00f0ff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("FATE", centerX, centerY);
+    }
+
+    drawWheel();
+
+    function spin() {
+      if (isSpinning) return;
+      isSpinning = true;
+      winnerBox.style.display = 'none';
+
+      // Pick high initial angular velocity
+      spinVelocity = 0.35 + Math.random() * 0.25;
+
+      animateSpin();
+    }
+
+    function animateSpin() {
+      currentAngle += spinVelocity;
+      spinVelocity *= 0.985; // friction damping
+
+      // Calculate which slice is currently under top pointer (pointer is at top: 3*PI/2)
+      const normalizedAngle = (2 * Math.PI - (currentAngle % (2 * Math.PI)) + (3 * Math.PI / 2)) % (2 * Math.PI);
+      const currentSliceIdx = Math.floor(normalizedAngle / sliceAngle) % numSlices;
+
+      if (currentSliceIdx !== lastSliceIdx) {
+        lastSliceIdx = currentSliceIdx;
+        if (window.soundFx) window.soundFx.playWheelTick();
+      }
+
+      drawWheel();
+
+      if (spinVelocity > 0.002) {
+        requestAnimationFrame(animateSpin);
+      } else {
+        // Spin finished!
+        isSpinning = false;
+        const winner = slices[currentSliceIdx];
+        selectedAnimeKey = winner.key;
+        announceWinner(winner.key);
+      }
+    }
+
+    function announceWinner(key) {
+      const data = animeDetails[key];
+      winnerTitle.textContent = data.title;
+      winnerDesc.textContent = data.desc;
+
+      rollEpisode(key);
+
+      winnerBox.style.display = 'block';
+
+      if (window.soundFx) window.soundFx.playPRankFanfare();
+      if (window.addStyle) window.addStyle(2000);
+
+      // Trigger Confetti
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+
+      // Highlight corresponding card
+      document.querySelectorAll('.anime-card').forEach(c => c.classList.remove('highlight'));
+      const activeCard = document.getElementById(`card-${key}`);
+      if (activeCard) activeCard.classList.add('highlight');
+    }
+
+    function rollEpisode(key) {
+      const data = animeDetails[key];
+      const randEp = data.episodes[Math.floor(Math.random() * data.episodes.length)];
+      winnerEpTitle.textContent = randEp.title;
+      winnerEpDesc.textContent = randEp.desc;
+    }
+
+    spinBtn.addEventListener('click', spin);
+    if (respinBtn) respinBtn.addEventListener('click', spin);
+    if (rerollEpisodeBtn) rerollEpisodeBtn.addEventListener('click', () => {
+      rollEpisode(selectedAnimeKey);
+      if (window.soundFx) window.soundFx.playTerminalBeep();
+    });
+  </script>
+</body>
+</html>

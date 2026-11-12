@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAGE 02 // CANVA VISION BOARD</title>
+  <link rel="stylesheet" href="css/ultrakill.css" />
+  <style>
+    /* Question Card Styling */
+    .prompt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .prompt-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--uk-border-bright);
+      padding: 1.4rem;
+      position: relative;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .prompt-card:hover {
+      border-color: var(--uk-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .prompt-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--uk-cyan);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.4rem;
+    }
+
+    .prompt-text {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      color: #fff;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    /* Live Pinboard */
+    .pinboard-wall {
+      background: #06070a;
+      border: 2px dashed var(--uk-border-bright);
+      padding: 1.5rem;
+      min-height: 240px;
+      margin-top: 1.2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .pin-card {
+      background: rgba(20, 26, 40, 0.9);
+      border: 1px solid var(--uk-cyan);
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.15);
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: #dbe4f0;
+      position: relative;
+      animation: pinDrop 0.3s ease-out;
+    }
+
+    .pin-badge {
+      font-size: 0.7rem;
+      color: var(--uk-yellow);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pin-close {
+      cursor: pointer;
+      color: #ff003c;
+      font-weight: bold;
+    }
+
+    @keyframes pinDrop {
+      from { transform: scale(0.9) translateY(-10px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    /* Blueprint category cards */
+    .blueprint-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .blueprint-card {
+      background: var(--uk-bg-panel);
+      border: 1px solid var(--uk-border);
+      padding: 1.4rem;
+      border-top: 3px solid var(--uk-yellow);
+    }
+
+    .blueprint-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 0.7rem;
+    }
+
+    .blueprint-list {
+      list-style: none;
+      padding: 0;
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      color: var(--uk-text-muted);
+      line-height: 1.6;
+    }
+
+    .blueprint-list li {
+      position: relative;
+      padding-left: 1.2rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .blueprint-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--uk-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio element for optional background music -->
+  <audio id="bgm-audio" loop preload="auto">
+    <source src="assets/Notion.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Cyber background, scanlines, and vignette -->
+  <div class="cyber-bg"></div>
+  <div class="crt-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- ULTRAKILL Top Navigation / HUD -->
+  <header class="uk-header">
+    <div class="uk-nav-container">
+      <a href="index.html" class="uk-brand">
+        <span class="uk-brand-badge">V1-ROMANCE</span>
+        <span class="uk-brand-title">ULTRA<span>KILL</span> // DATE HUB</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="uk-nav-links">
+        <a href="index.html" class="uk-nav-link">[00] PROPOSAL</a>
+        <a href="mission1-ultrakill.html" class="uk-nav-link">[01] ULTRAKILL DUEL</a>
+        <a href="mission2-visionboard.html" class="uk-nav-link active">[02] CANVA BOARD</a>
+        <a href="mission3-anime.html" class="uk-nav-link">[03] ANIME WHEEL</a>
+        <a href="mission4-ironman.html" class="uk-nav-link ironman-link">★ [04] IRON MAN 2</a>
+      </nav>
+
+      <!-- Audio controls -->
+      <div class="uk-sound-ctrls">
+        <button id="mute-toggle-btn" class="uk-icon-btn">[AUDIO: ON]</button>
+        <button id="bgm-toggle-btn" class="uk-icon-btn">[BGM: PAUSED]</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating ULTRAKILL Style Meter -->
+  <div class="uk-floating-style">
+    <div class="uk-style-rank-badge" id="uk-style-rank">S</div>
+    <div class="uk-style-name" id="uk-style-name">SUPREME</div>
+    <div class="uk-style-points" id="uk-style-pts">STYLE: 2,750 PTS</div>
+  </div>
+
+  <main class="uk-container">
+
+    <!-- Mission Header -->
+    <div class="uk-badge-gold">STAGE 02 // CREATIVE FUTURE COLLABORATION</div>
+    <h1 class="uk-title-large">
+      DREAMING OUR FUTURE ON <span style="color:var(--uk-yellow);">CANVA</span>
+    </h1>
+    <p class="uk-subtitle">
+      After sweating in ULTRAKILL, we kick back side-by-side with our laptops and open up Canva! Using all the deep questions from our previous date proposal, we'll design our dream aesthetic vision board together — pinning our wildest bucket-list adventures, dream home, pets, cars, and inspiring love quotes.
+    </p>
+
+    <!-- Canva Quick Launch Hub -->
+    <section class="uk-panel uk-panel-gold" style="margin-top: 2.5rem; text-align: center;">
+      <div class="uk-badge-gold">DIRECT ACCESS LINK</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2rem; color: #fff; margin-bottom: 0.6rem;">
+        READY TO BUILD OUR CANVA BOARD?
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); max-width: 600px; margin: 0 auto 1.5rem; font-size: 0.95rem;">
+        Open Canva's free collaborative Vision Board creator in a new tab. We'll drag in photos, aesthetic collage clippings, and quotes side by side!
+      </p>
+
+      <a href="https://www.canva.com/create/vision-boards/" target="_blank" rel="noopener noreferrer" class="uk-btn uk-btn-gold" style="font-size: 1.1rem; padding: 1rem 2.5rem;">
+        🚀 LAUNCH CANVA VISION BOARD STUDIO ↗
+      </a>
+    </section>
+
+    <!-- Terminal Random Question Sparker -->
+    <section class="uk-panel uk-panel-red" style="margin-top: 2.5rem;">
+      <div class="uk-badge">TERMINAL QUESTION SPARKER</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        WHAT SHOULD WE ADD NEXT?
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+        Hit the spark button to pull a question from our proposal archive!
+      </p>
+
+      <div class="uk-terminal-box" style="margin-bottom: 1.2rem; min-height: 90px; display: flex; align-items: center;">
+        <div id="spark-output" style="font-size: 1.15rem; color: #fff;">
+          ⚡ CLICK "GENERATE PROMPT" TO DRAW OUR FIRST VISION QUESTION...
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button id="spark-btn" class="uk-btn uk-btn-red">
+          🎲 GENERATE RANDOM PROMPT
+        </button>
+        <button id="pin-spark-btn" class="uk-btn uk-btn-secondary" style="display: none;">
+          📌 PIN THIS QUESTION TO OUR BOARD
+        </button>
+      </div>
+    </section>
+
+    <!-- The 9 Official Proposal Questions -->
+    <section style="margin-top: 3.5rem;">
+      <div class="uk-badge-cyan">PROPOSAL ARCHIVE // THE 9 GUIDING QUESTIONS</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        OUR 9 VISION BOARD QUESTIONS
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.9rem;">
+        Each of these comes directly from our previous date proposal. Click "COPY" to copy the text, or "PIN" to drop it onto our live interactive board!
+      </p>
+
+      <div class="prompt-grid" id="prompts-container">
+        <!-- Injected via JS or hardcoded for reliable rendering -->
+      </div>
+    </section>
+
+    <!-- Interactive Pinboard & Quote Vault -->
+    <section class="uk-panel" style="margin-top: 3.5rem;">
+      <div class="uk-badge-gold">SCRATCHPAD // LIVE INTERACTIVE PINBOARD</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        OUR PINNED IDEAS &amp; QUOTES
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.9rem;">
+        Type an answer, an inspiring quote, or a crazy dream below and pin it to our board!
+      </p>
+
+      <!-- Add Custom Note / Quote Input -->
+      <div style="display: flex; gap: 0.8rem; margin-top: 1.2rem; flex-wrap: wrap;">
+        <input 
+          id="custom-pin-input" 
+          type="text" 
+          placeholder="Type an idea or quote (e.g., 'Late night ramen runs in Shinjuku')..." 
+          style="flex-grow: 1; min-width: 280px; background: #000; border: 1px solid var(--uk-border-bright); color: #fff; font-family: var(--font-mono); padding: 0.8rem 1rem; font-size: 0.95rem;" 
+        />
+        <button id="add-pin-btn" class="uk-btn uk-btn-gold">
+          📌 PIN TO BOARD
+        </button>
+      </div>
+
+      <!-- Live Wall of Pinned Cards -->
+      <div class="pinboard-wall" id="pinboard-wall">
+        <!-- Pre-populated sample cards -->
+        <div class="pin-card">
+          <div class="pin-badge">
+            <span>💖 ROMANTIC QUOTE</span>
+            <span class="pin-close" onclick="this.parentElement.parentElement.remove()">✕</span>
+          </div>
+          <div>"I would rather spend one lifetime with you, than face all the ages of this world alone." — Tolkien</div>
+        </div>
+        <div class="pin-card">
+          <div class="pin-badge">
+            <span>✨ FUTURE ADVENTURE</span>
+            <span class="pin-close" onclick="this.parentElement.parentElement.remove()">✕</span>
+          </div>
+          <div>Exploring Tokyo's neon alleys at midnight and riding high-speed bullet trains together.</div>
+        </div>
+        <div class="pin-card">
+          <div class="pin-badge">
+            <span>🎮 GAMER ROMANCE</span>
+            <span class="pin-close" onclick="this.parentElement.parentElement.remove()">✕</span>
+          </div>
+          <div>Side-by-side matching dual PC battlestations with OLED curved monitors and mechanical key clicks.</div>
+        </div>
+        <div class="pin-card">
+          <div class="pin-badge">
+            <span>☕ MORNING DREAM</span>
+            <span class="pin-close" onclick="this.parentElement.parentElement.remove()">✕</span>
+          </div>
+          <div>Curled up in a sunlit breakfast nook, hot vanilla lattes in hand, zero alarms ringing.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 Inspiration Categories (from Proposal Archive) -->
+    <section style="margin-top: 3.5rem;">
+      <div class="uk-badge-cyan">INSPIRATION BLUEPRINT // 8 DREAM CATEGORIES</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        CATEGORIES FOR OUR CANVA CANVAS
+      </h2>
+
+      <div class="blueprint-grid">
+
+        <div class="blueprint-card">
+          <h4>1. Only Try Once (Together!)</h4>
+          <ul class="blueprint-list">
+            <li>Tandem skydiving over Interlaken or Hawaii</li>
+            <li>Zero-gravity vomit comet parabolic flight</li>
+            <li>3-Star Michelin blind tasting dinner</li>
+            <li>Staying in an underwater glass aquarium suite</li>
+            <li>Scenic canyon bridge bungee jumping</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>2. Our Future Dream Home</h4>
+          <ul class="blueprint-list">
+            <li>Floor-to-ceiling panoramic glass windows</li>
+            <li>Sunken conversation pit with ambient fireplace</li>
+            <li>Wrap-around redwood deck with scenic overlook</li>
+            <li>Massive open-concept kitchen with espresso bar</li>
+            <li>Dedicated home theater with Dolby Atmos</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>3. Furry Companions</h4>
+          <ul class="blueprint-list">
+            <li>A fluffy Golden Retriever or Samoyed puppy</li>
+            <li>A sweet rescue kitten curled up on our sofa</li>
+            <li>Goofy French Bulldog or playful Shiba Inu</li>
+            <li>Custom pet bath station in the mudroom</li>
+            <li>Funny inside-joke nicknames for them</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>4. Kids &amp; Baby Names</h4>
+          <ul class="blueprint-list">
+            <li>Favorite boy names: <em>Leo, Kai, Rowan, Lucas, Noah</em></li>
+            <li>Favorite girl names: <em>Maya, Mila, Chloe, Elena, Aria</em></li>
+            <li>Bedtime stories and weekend pancake stacks</li>
+            <li>Passing down our favorite anime, games &amp; music</li>
+            <li>Family road trips and building treehouses</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>5. Dream Cities &amp; Travel</h4>
+          <ul class="blueprint-list">
+            <li>Late-night neon streets of Tokyo &amp; Kyoto</li>
+            <li>Quiet peaceful villa near Lake Como, Italy</li>
+            <li>Pacific Northwest scenic vibes: Seattle or Vancouver</li>
+            <li>Modern penthouse in New York or London</li>
+            <li>Private tropical overwater bungalow</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>6. Dream Cars &amp; Drives</h4>
+          <ul class="blueprint-list">
+            <li>Porsche 911 GT3 or sleek electric Taycan</li>
+            <li>Adventure-ready Rivian R1S for scenic camping</li>
+            <li>Vintage convertible along California Highway 1</li>
+            <li>High-speed road trips with our songs blasting</li>
+            <li>Custom ambient interior cabin lights</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>7. Tech &amp; Battlestations</h4>
+          <ul class="blueprint-list">
+            <li>Side-by-side custom dual PC dream setup</li>
+            <li>Ultra-wide curved OLED monitors with bias glow</li>
+            <li>Next-gen lightweight AR smart glasses</li>
+            <li>Laser 4K ultra-short-throw home cinema</li>
+            <li>Custom tactile mechanical keyboards</li>
+          </ul>
+        </div>
+
+        <div class="blueprint-card">
+          <h4>8. Smart Household Tech</h4>
+          <ul class="blueprint-list">
+            <li>Automated motorized blackout roller shades</li>
+            <li>Philips Hue whole-home ambient light scenes</li>
+            <li>Robotic vacuum &amp; mop with self-emptying dock</li>
+            <li>Heated bathroom tile floors on winter mornings</li>
+            <li>Dual-zone temperature regulated smart mattress</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Couple Recon Photo Drawer for Canva inspiration -->
+    <section class="uk-panel" style="margin-top: 3.5rem;">
+      <div class="uk-badge-cyan">PHOTO VAULT // OUR REAL MEMORIES FOR CANVA</div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.6rem; color: #fff; margin-bottom: 0.5rem;">
+        PHOTOS READY FOR OUR VISION BOARD
+      </h3>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.85rem; margin-bottom: 1.2rem;">
+        Right-click or hold any image to copy and drop directly onto Canva!
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.8rem;">
+        <img src="assets/2.jpg" alt="Photo 2" style="width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--uk-border);" />
+        <img src="assets/4.PNG" alt="Photo 4" style="width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--uk-border);" />
+        <img src="assets/6.jpg" alt="Photo 6" style="width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--uk-border);" />
+        <img src="assets/8.jpg" alt="Photo 8" style="width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--uk-border);" />
+        <img src="assets/10.jpg" alt="Photo 10" style="width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--uk-border);" />
+        <img src="assets/11.jpg" alt="Photo 11" style="width:100%;aspect-ratio:1/1;object-fit:cover;border:1px solid var(--uk-border);" />
+      </div>
+    </section>
+
+    <!-- Navigation footer -->
+    <div style="margin-top: 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <a href="mission1-ultrakill.html" class="uk-btn uk-btn-secondary">← BACK TO STAGE 01</a>
+      <a href="mission3-anime.html" class="uk-btn uk-btn-gold">
+        PROCEED TO STAGE 03: ANIME WHEEL →
+      </a>
+    </div>
+
+  </main>
+
+  <script src="js/sounds.js"></script>
+  <script src="js/ultrakill.js"></script>
+  <script>
+    // The exact 9 questions from the previous proposal
+    const PROPOSAL_QUESTIONS = [
+      "What is one wild, crazy adventure you'd be willing to try JUST ONCE with me?",
+      "Describe our ideal morning in our dream house: where are we sitting, and what's in our mugs?",
+      "If we could adopt any pet tomorrow, what would their name and personality be?",
+      "What is your all-time favorite boy and girl name for our future kids?",
+      "If we could live in any city in the world for 1 year together, where are we moving?",
+      "What car are we taking on our ultimate dream road trip along the coast?",
+      "What futuristic smart home gadget must our future kitchen or living room have?",
+      "What will our dream couple's Sunday routine look like 5 years from now?",
+      "If money was no object, what's the very first trip we are booking on Canva right now?"
+    ];
+
+    // Render the 9 questions grid
+    const promptsContainer = document.getElementById('prompts-container');
+    PROPOSAL_QUESTIONS.forEach((q, idx) => {
+      const card = document.createElement('div');
+      card.className = 'prompt-card';
+      card.innerHTML = `
+        <div>
+          <div class="prompt-num">QUESTION [0${idx + 1}]</div>
+          <div class="prompt-text">"${q}"</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.8rem;">
+          <button class="uk-btn uk-btn-secondary" style="font-size:0.75rem;padding:0.4rem 0.8rem;" onclick="copyPromptText('${q.replace(/'/g, "\\'")}', this)">
+            📋 COPY
+          </button>
+          <button class="uk-btn uk-btn-gold" style="font-size:0.75rem;padding:0.4rem 0.8rem;" onclick="pinQuestionToBoard('${q.replace(/'/g, "\\'")}')">
+            📌 PIN
+          </button>
+        </div>
+      `;
+      promptsContainer.appendChild(card);
+    });
+
+    function copyPromptText(text, btn) {
+      navigator.clipboard.writeText(text);
+      if (window.soundFx) window.soundFx.playTerminalBeep();
+      const orig = btn.textContent;
+      btn.textContent = 'COPIED!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    }
+
+    function pinQuestionToBoard(text) {
+      addPinCard('QUESTION PROMPT', text);
+      if (window.soundFx) window.soundFx.playCoinToss();
+      if (window.addStyle) window.addStyle(300);
+    }
+
+    // Sparker Logic
+    const sparkBtn = document.getElementById('spark-btn');
+    const sparkOutput = document.getElementById('spark-output');
+    const pinSparkBtn = document.getElementById('pin-spark-btn');
+    let currentSpark = '';
+
+    sparkBtn.addEventListener('click', () => {
+      if (window.soundFx) window.soundFx.playTerminalBeep();
+      sparkOutput.style.opacity = '0.3';
+      
+      setTimeout(() => {
+        const rand = PROPOSAL_QUESTIONS[Math.floor(Math.random() * PROPOSAL_QUESTIONS.length)];
+        currentSpark = rand;
+        sparkOutput.textContent = `"${rand}"`;
+        sparkOutput.style.opacity = '1';
+        pinSparkBtn.style.display = 'inline-flex';
+        if (window.addStyle) window.addStyle(200);
+      }, 250);
+    });
+
+    pinSparkBtn.addEventListener('click', () => {
+      if (!currentSpark) return;
+      pinQuestionToBoard(currentSpark);
+    });
+
+    // Pinboard Custom Note
+    const pinboardWall = document.getElementById('pinboard-wall');
+    const customPinInput = document.getElementById('custom-pin-input');
+    const addPinBtn = document.getElementById('add-pin-btn');
+
+    function addPinCard(badge, text) {
+      const card = document.createElement('div');
+      card.className = 'pin-card';
+      card.innerHTML = `
+        <div class="pin-badge">
+          <span>${badge}</span>
+          <span class="pin-close" onclick="this.parentElement.parentElement.remove()">✕</span>
+        </div>
+        <div>${text}</div>
+      `;
+      pinboardWall.prepend(card);
+    }
+
+    addPinBtn.addEventListener('click', () => {
+      const val = customPinInput.value.trim();
+      if (!val) return;
+      addPinCard('OUR VISION NOTE', val);
+      customPinInput.value = '';
+      if (window.soundFx) window.soundFx.playCoinToss();
+      if (window.addStyle) window.addStyle(250);
+    });
+
+    customPinInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') addPinBtn.click();
+    });
+  </script>
+</body>
+</html>

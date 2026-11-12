@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAGE 01 // ULTRAKILL COACHING & DUEL</title>
+  <link rel="stylesheet" href="css/ultrakill.css" />
+  <style>
+    /* Mini-game arena */
+    .coin-arena {
+      height: 320px;
+      background: radial-gradient(circle at center, #121724 0%, #06070a 100%);
+      border: 2px solid var(--uk-cyan);
+      position: relative;
+      overflow: hidden;
+      cursor: crosshair;
+      user-select: none;
+      margin-top: 1rem;
+      box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.15);
+    }
+
+    .coin-target {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff7a1 0%, #ffd000 60%, #b8860b 100%);
+      border: 2px solid #fff;
+      box-shadow: 0 0 20px #ffd000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      font-size: 0.85rem;
+      color: #000;
+      transform: translate(-50%, -50%);
+      transition: box-shadow 0.1s;
+    }
+
+    .coin-target.hit {
+      animation: coinHitBurst 0.3s forwards ease-out;
+    }
+
+    @keyframes coinHitBurst {
+      0% { transform: translate(-50%, -50%) scale(1); filter: brightness(2); }
+      50% { transform: translate(-50%, -50%) scale(1.6); opacity: 0.9; }
+      100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+    }
+
+    .hit-flash-text {
+      position: absolute;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.8rem;
+      font-style: italic;
+      color: #00f0ff;
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+      pointer-events: none;
+      animation: floatFade 0.8s forwards ease-out;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes floatFade {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -100%) scale(1.2); }
+    }
+
+    /* Scoreboard */
+    .scoreboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+
+    .scoreboard-table th, .scoreboard-table td {
+      border: 1px solid var(--uk-border-bright);
+      padding: 0.8rem 1rem;
+      text-align: left;
+    }
+
+    .scoreboard-table th {
+      background: rgba(255, 0, 60, 0.15);
+      color: var(--uk-cyan);
+      letter-spacing: 0.1em;
+    }
+
+    .scoreboard-input {
+      background: #000;
+      border: 1px solid var(--uk-border-bright);
+      color: #fff;
+      font-family: var(--font-mono);
+      padding: 0.3rem 0.6rem;
+      width: 90px;
+    }
+
+    /* Level Checkbox items */
+    .level-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--uk-border);
+      margin-bottom: 0.5rem;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .level-item:hover {
+      border-color: var(--uk-cyan);
+      background: rgba(0, 240, 255, 0.05);
+    }
+    .level-item.completed {
+      border-color: var(--uk-yellow);
+      background: rgba(255, 208, 0, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio element for optional background music -->
+  <audio id="bgm-audio" loop preload="auto">
+    <source src="assets/Notion.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Cyber background, scanlines, and vignette -->
+  <div class="cyber-bg"></div>
+  <div class="crt-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- ULTRAKILL Top Navigation / HUD -->
+  <header class="uk-header">
+    <div class="uk-nav-container">
+      <a href="index.html" class="uk-brand">
+        <span class="uk-brand-badge">V1-ROMANCE</span>
+        <span class="uk-brand-title">ULTRA<span>KILL</span> // DATE HUB</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="uk-nav-links">
+        <a href="index.html" class="uk-nav-link">[00] PROPOSAL</a>
+        <a href="mission1-ultrakill.html" class="uk-nav-link active">[01] ULTRAKILL DUEL</a>
+        <a href="mission2-visionboard.html" class="uk-nav-link">[02] CANVA BOARD</a>
+        <a href="mission3-anime.html" class="uk-nav-link">[03] ANIME WHEEL</a>
+        <a href="mission4-ironman.html" class="uk-nav-link ironman-link">★ [04] IRON MAN 2</a>
+      </nav>
+
+      <!-- Audio controls -->
+      <div class="uk-sound-ctrls">
+        <button id="mute-toggle-btn" class="uk-icon-btn">[AUDIO: ON]</button>
+        <button id="bgm-toggle-btn" class="uk-icon-btn">[BGM: PAUSED]</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating ULTRAKILL Style Meter -->
+  <div class="uk-floating-style">
+    <div class="uk-style-rank-badge" id="uk-style-rank">A</div>
+    <div class="uk-style-name" id="uk-style-name">ANARCHIC</div>
+    <div class="uk-style-points" id="uk-style-pts">STYLE: 1,850 PTS</div>
+  </div>
+
+  <main class="uk-container">
+
+    <!-- Mission Header -->
+    <div class="uk-badge">STAGE 01 // COMBAT &amp; COACHING</div>
+    <h1 class="uk-title-large">
+      TEACHING MADDIE HOW TO <span style="color:var(--uk-red);">BEAT LEVELS</span>
+    </h1>
+    <p class="uk-subtitle">
+      Sahil takes the commander seat as veteran V1 coach! Today's mission is training Maddie to slide, coin-punch, parry projectiles, and conquer Hell's deadliest boss encounters — followed by a head-to-head Cybergrind score battle!
+    </p>
+
+    <!-- Coach Sahil's 4 Core Training Modules -->
+    <section class="uk-panel uk-panel-red" style="margin-top: 2.5rem;">
+      <div class="uk-badge-cyan">TACTICAL MANUAL // FROM SAHIL TO MADDIE</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 1.2rem;">
+        V1 COMBAT DOCTRINE
+      </h2>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem;">
+        
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--uk-border-bright); padding: 1.2rem;">
+          <div style="color: var(--uk-cyan); font-family: var(--font-mono); font-size: 0.8rem; font-weight: bold; margin-bottom: 0.4rem;">
+            [LESSON 01]
+          </div>
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">
+            BLOOD IS FUEL (HEALING)
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.5;">
+            There are no medkits in ULTRAKILL. To regain HP, get right in the enemy's face and shower in fresh blood. Sliding keeps your hitbox tiny while maintaining high momentum!
+          </p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--uk-border-bright); padding: 1.2rem;">
+          <div style="color: var(--uk-yellow); font-family: var(--font-mono); font-size: 0.8rem; font-weight: bold; margin-bottom: 0.4rem;">
+            [LESSON 02]
+          </div>
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">
+            MARKSMAN COIN MASTERY
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.5;">
+            Toss a coin into the air with right-click, then shoot it with your revolver or pierce it with the railcannon. The bullet auto-targets enemy weakpoints for insane multiplier damage!
+          </p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--uk-border-bright); padding: 1.2rem;">
+          <div style="color: var(--uk-red); font-family: var(--font-mono); font-size: 0.8rem; font-weight: bold; margin-bottom: 0.4rem;">
+            [LESSON 03]
+          </div>
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">
+            PROJECTILE BOOSTING
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.5;">
+            Fire the primary shotgun blast and hit 'F' (Feedbacker punch) in the exact same millisecond. You punch your own pellets, turning them into a massive flying explosive mortar!
+          </p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--uk-border-bright); padding: 1.2rem;">
+          <div style="color: #ff00ff; font-family: var(--font-mono); font-size: 0.8rem; font-weight: bold; margin-bottom: 0.4rem;">
+            [LESSON 04]
+          </div>
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: #fff; margin-bottom: 0.5rem;">
+            PARRYING GABRIEL &amp; V2
+          </h3>
+          <p style="font-family: var(--font-display); font-size: 0.9rem; color: var(--uk-text-muted); line-height: 1.5;">
+            When an attack flashes yellow, punch it directly to parry! Parrying fully restores your stamina and health to 100% instantly while chunking the boss's lifebar.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Simulator: The Coin Toss Range -->
+    <section class="uk-panel uk-panel-gold" style="margin-top: 2.5rem;">
+      <div class="uk-badge-gold">INTERACTIVE TARGET RANGE</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        MARKSMAN COIN PRACTICE RANGE
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.9rem;">
+        Press <strong>TOSS COIN</strong> (or press SPACEBAR) to flick a coin into the arena, then click it before it falls! Practice your speed, earn style points, and prove you have the reflexes of V1.
+      </p>
+
+      <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem; flex-wrap: wrap;">
+        <button id="toss-coin-btn" class="uk-btn uk-btn-gold">
+          🪙 TOSS COIN [SPACE]
+        </button>
+        <span style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--uk-yellow);" id="coin-stats">
+          COINS HIT: 0 | STREAK: 0 | BEST: 0
+        </span>
+      </div>
+
+      <div class="coin-arena" id="coin-arena">
+        <div style="position: absolute; top: 10px; left: 15px; font-family: var(--font-mono); font-size: 0.75rem; color: rgba(0, 240, 255, 0.4);">
+          ARENA://MARKSMAN_TARGET_TEST &bull; CLICK COIN TO SHOOT
+        </div>
+        <div id="coin-elem" class="coin-target">$</div>
+      </div>
+    </section>
+
+    <!-- Level Checklist & Campaign Progression -->
+    <section class="uk-panel" style="margin-top: 2.5rem;">
+      <div class="uk-badge-cyan">CAMPAIGN ROADMAP // LEVELS TO CONQUER TOGETHER</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        MADDIE'S LEVEL CLEARANCE LIST
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+        Sahil and Maddie will play through these together. Click any level to mark it as CLEARED with a P-Rank stamp!
+      </p>
+
+      <div id="level-list">
+        <div class="level-item" onclick="toggleLevel(this)">
+          <span style="font-family:var(--font-mono);color:var(--uk-cyan);width:45px;">[0-1]</span>
+          <div style="flex-grow:1;">
+            <strong style="color:#fff;">INTO THE FIRE</strong> — Movement basics, sliding underneath doors, blood health intro.
+          </div>
+          <span class="status-stamp" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--uk-text-muted);">[PENDING]</span>
+        </div>
+
+        <div class="level-item" onclick="toggleLevel(this)">
+          <span style="font-family:var(--font-mono);color:var(--uk-cyan);width:45px;">[0-5]</span>
+          <div style="flex-grow:1;">
+            <strong style="color:#fff;">CERBERUS SHOWDOWN</strong> — Double giant boss battle. Parrying energy orbs!
+          </div>
+          <span class="status-stamp" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--uk-text-muted);">[PENDING]</span>
+        </div>
+
+        <div class="level-item" onclick="toggleLevel(this)">
+          <span style="font-family:var(--font-mono);color:var(--uk-yellow);width:45px;">[1-4]</span>
+          <div style="flex-grow:1;">
+            <strong style="color:#fff;">CLAIR DE LUNE (V2 DUEL)</strong> — High-speed mirror match! Coin tossing and whiplash unlock.
+          </div>
+          <span class="status-stamp" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--uk-text-muted);">[PENDING]</span>
+        </div>
+
+        <div class="level-item" onclick="toggleLevel(this)">
+          <span style="font-family:var(--font-mono);color:var(--uk-red);width:45px;">[2-4]</span>
+          <div style="flex-grow:1;">
+            <strong style="color:#fff;">COURT OF THE CORPSE KING</strong> — Massive colossus boss battle in the Lust layer!
+          </div>
+          <span class="status-stamp" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--uk-text-muted);">[PENDING]</span>
+        </div>
+
+        <div class="level-item" onclick="toggleLevel(this)">
+          <span style="font-family:var(--font-mono);color:#ff00ff;width:45px;">[3-2]</span>
+          <div style="flex-grow:1;">
+            <strong style="color:#fff;">IN THE FLESH (GABRIEL)</strong> — The legendary fight against the Righteous Hand of the Father!
+          </div>
+          <span class="status-stamp" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--uk-text-muted);">[PENDING]</span>
+        </div>
+
+        <div class="level-item" onclick="toggleLevel(this)">
+          <span style="font-family:var(--font-mono);color:var(--uk-yellow);width:45px;">[CYBER]</span>
+          <div style="flex-grow:1;">
+            <strong style="color:#fff;">THE CYBERGRIND</strong> — Endless wave arena. Who can survive the highest wave?
+          </div>
+          <span class="status-stamp" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--uk-text-muted);">[PENDING]</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Head to Head Cybergrind Scoreboard -->
+    <section class="uk-panel uk-panel-red" style="margin-top: 2.5rem;">
+      <div class="uk-badge">FRIENDLY DUEL // CYBERGRIND LEADERBOARD</div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; color: #fff; margin-bottom: 0.5rem;">
+        SAHIL VS MADDIE SCORE TRACKER
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); font-size: 0.9rem;">
+        Input your scores as you play during the date to see who claims ultimate bragging rights!
+      </p>
+
+      <table class="scoreboard-table">
+        <thead>
+          <tr>
+            <th>PILOT</th>
+            <th>HIGHEST WAVE</th>
+            <th>STYLE POINTS</th>
+            <th>BEST LEVEL TIME</th>
+            <th>FAVORITE COMBO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--uk-cyan);font-weight:bold;">SAHIL (COACH V1)</td>
+            <td><input class="scoreboard-input" type="text" value="Wave 38" /></td>
+            <td><input class="scoreboard-input" type="text" value="84,200" /></td>
+            <td><input class="scoreboard-input" type="text" value="01:14.3" /></td>
+            <td><input class="scoreboard-input" type="text" style="width:160px;" value="Railcoin Punch" /></td>
+          </tr>
+          <tr>
+            <td style="color:var(--uk-red);font-weight:bold;">MADDIE (TRAINEE V2)</td>
+            <td><input class="scoreboard-input" type="text" value="Wave 25" /></td>
+            <td><input class="scoreboard-input" type="text" value="62,500" /></td>
+            <td><input class="scoreboard-input" type="text" value="01:42.8" /></td>
+            <td><input class="scoreboard-input" type="text" style="width:160px;" value="Shotgun Boost" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <a href="index.html" class="uk-btn uk-btn-secondary">← BACK TO PROPOSAL</a>
+        <a href="mission2-visionboard.html" class="uk-btn uk-btn-gold">
+          PROCEED TO STAGE 02: CANVA VISION BOARD →
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="js/sounds.js"></script>
+  <script src="js/ultrakill.js"></script>
+  <script>
+    // Coin Shooter Simulator Logic
+    const arena = document.getElementById('coin-arena');
+    const coin = document.getElementById('coin-elem');
+    const tossBtn = document.getElementById('toss-coin-btn');
+    const statsElem = document.getElementById('coin-stats');
+
+    let hits = 0;
+    let streak = 0;
+    let best = 0;
+    let coinActive = false;
+    let coinX = 0;
+    let coinY = 0;
+    let velX = 0;
+    let velY = 0;
+    const gravity = 0.45;
+    let animId = null;
+
+    function tossCoin() {
+      if (coinActive) return;
+      coinActive = true;
+      if (window.soundFx) window.soundFx.playCoinToss();
+
+      const rect = arena.getBoundingClientRect();
+      coinX = rect.width * 0.2 + Math.random() * (rect.width * 0.6);
+      coinY = rect.height - 20;
+
+      velX = (Math.random() - 0.5) * 4;
+      velY = -(14 + Math.random() * 4); // upward velocity
+
+      coin.style.display = 'flex';
+      coin.classList.remove('hit');
+
+      cancelAnimationFrame(animId);
+      updateCoinPhysics();
+    }
+
+    function updateCoinPhysics() {
+      if (!coinActive) return;
+
+      velY += gravity;
+      coinX += velX;
+      coinY += velY;
+
+      const rect = arena.getBoundingClientRect();
+
+      // Bounds
+      if (coinX < 20 || coinX > rect.width - 20) velX *= -1;
+
+      coin.style.left = `${coinX}px`;
+      coin.style.top = `${coinY}px`;
+
+      if (coinY > rect.height + 30) {
+        // Missed
+        coinActive = false;
+        coin.style.display = 'none';
+        streak = 0;
+        updateStats();
+      } else {
+        animId = requestAnimationFrame(updateCoinPhysics);
+      }
+    }
+
+    // Shoot coin
+    coin.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      if (!coinActive) return;
+
+      coinActive = false;
+      hits++;
+      streak++;
+      if (streak > best) best = streak;
+
+      if (window.soundFx) window.soundFx.playParry();
+      if (window.addStyle) window.addStyle(500);
+
+      coin.classList.add('hit');
+
+      // Style Popup
+      const flash = document.createElement('div');
+      flash.className = 'hit-flash-text';
+      flash.style.left = `${coinX}px`;
+      flash.style.top = `${coinY}px`;
+      const popups = ['+ ULTRARICOSHOT x4', '+ FISTFUL OF DOLLAR', '+ PROJECTILE BOOST', '+ PARRY DISRUPT'];
+      flash.textContent = popups[Math.floor(Math.random() * popups.length)];
+      arena.appendChild(flash);
+      setTimeout(() => flash.remove(), 800);
+
+      updateStats();
+
+      setTimeout(() => {
+        coin.style.display = 'none';
+        coin.classList.remove('hit');
+      }, 300);
+    });
+
+    function updateStats() {
+      statsElem.textContent = `COINS HIT: ${hits} | STREAK: ${streak} | BEST: ${best}`;
+    }
+
+    tossBtn.addEventListener('click', tossCoin);
+
+    // Keyboard Spacebar shortcut
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        tossCoin();
+      }
+    });
+
+    // Level Clearance Toggle
+    function toggleLevel(elem) {
+      elem.classList.toggle('completed');
+      const stamp = elem.querySelector('.status-stamp');
+      if (elem.classList.contains('completed')) {
+        stamp.innerHTML = '<span style="color:#ffd000;font-weight:bold;">★ [P-RANK CLEARED]</span>';
+        if (window.soundFx) window.soundFx.playPRankFanfare();
+        if (window.addStyle) window.addStyle(1000);
+      } else {
+        stamp.innerHTML = '<span style="color:var(--uk-text-muted);">[PENDING]</span>';
+      }
+    }
+  </script>
+</body>
+</html>

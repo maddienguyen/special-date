@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ULTRAKILL DATE PROTOCOL // SAHIL & MADDIE</title>
+  <link rel="stylesheet" href="css/ultrakill.css" />
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Audio element for optional background music -->
+  <audio id="bgm-audio" loop preload="auto">
+    <source src="assets/Notion.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Cyber background grid, scanlines, and vignette -->
+  <div class="cyber-bg"></div>
+  <div class="crt-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- ULTRAKILL Top Navigation / HUD -->
+  <header class="uk-header">
+    <div class="uk-nav-container">
+      <a href="index.html" class="uk-brand">
+        <span class="uk-brand-badge">V1-ROMANCE</span>
+        <span class="uk-brand-title">ULTRA<span>KILL</span> // DATE HUB</span>
+      </a>
+
+      <!-- HUD Health & Stamina -->
+      <div class="uk-hud-gauges">
+        <div class="uk-hud-stat">
+          <span class="uk-hud-label">BLOOD / HP</span>
+          <div class="uk-bar-wrap">
+            <div class="uk-bar-fill-hp"></div>
+          </div>
+        </div>
+        <div class="uk-hud-stat">
+          <span class="uk-hud-label">STAMINA</span>
+          <div class="uk-stamina-cells">
+            <div class="uk-stamina-cell"></div>
+            <div class="uk-stamina-cell"></div>
+            <div class="uk-stamina-cell"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="uk-nav-links">
+        <a href="index.html" class="uk-nav-link active">[00] PROPOSAL</a>
+        <a href="mission1-ultrakill.html" class="uk-nav-link">[01] ULTRAKILL DUEL</a>
+        <a href="mission2-visionboard.html" class="uk-nav-link">[02] CANVA BOARD</a>
+        <a href="mission3-anime.html" class="uk-nav-link">[03] ANIME WHEEL</a>
+        <a href="mission4-ironman.html" class="uk-nav-link ironman-link">★ [04] IRON MAN 2</a>
+      </nav>
+
+      <!-- Audio controls -->
+      <div class="uk-sound-ctrls">
+        <button id="mute-toggle-btn" class="uk-icon-btn">[AUDIO: ON]</button>
+        <button id="bgm-toggle-btn" class="uk-icon-btn">[BGM: PAUSED]</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Floating ULTRAKILL Style Meter -->
+  <div class="uk-floating-style">
+    <div class="uk-style-rank-badge" id="uk-style-rank">S</div>
+    <div class="uk-style-name" id="uk-style-name">SUPREME</div>
+    <div class="uk-style-points" id="uk-style-pts">STYLE: 2,500 PTS</div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="uk-container">
+
+    <!-- Terminal Boot Protocol -->
+    <div class="uk-terminal-box">
+      <div class="uk-terminal-header">
+        <span>TERMINAL://V1_TERMINAL_COMMUNICATION_PROTOCOL</span>
+        <span>SECURITY LEVEL: PERFECT (P-RANK)</span>
+      </div>
+      <div>
+        <span style="color:#ff003c;font-weight:bold;">MANKIND IS DEAD.</span><br />
+        <span style="color:#00f0ff;font-weight:bold;">BLOOD IS FUEL.</span><br />
+        <span style="color:#ffd000;font-weight:bold;">HELL IS FULL...</span><br />
+        <span style="color:#ffffff;">...BUT TONIGHT, SAHIL, WE HAVE AN UNFORGETTABLE DATE TO CONQUER.</span>
+        <span class="uk-cursor"></span>
+      </div>
+    </div>
+
+    <!-- Date Proposal Hero Banner -->
+    <section class="uk-panel uk-panel-gold" style="text-align: center; margin-top: 2rem;">
+      <div class="uk-badge-gold">DIRECTIVE // TARGET: SAHIL</div>
+      <h1 class="uk-title-large">
+        SAHIL, WILL YOU BE <span style="color:var(--uk-yellow);">MY DATE?</span>
+      </h1>
+      <p class="uk-subtitle" style="margin: 0 auto 2rem; font-size: 1.15rem;">
+        Maddie has deployed a special 4-part date mission. From high-octane ULTRAKILL level beatings and friendly rivalry, to designing our dream future together on Canva, letting fate pick our anime on the wheel, and concluding in Tony Stark style with Iron Man 2.
+      </p>
+
+      <!-- Interactive Proposal Action Arena -->
+      <div style="display: flex; gap: 1.5rem; justify-content: center; align-items: center; flex-wrap: wrap; position: relative; min-height: 80px;">
+        <button id="uk-accept-btn" class="uk-btn uk-btn-gold" style="font-size: 1.15rem; padding: 1rem 2.5rem;">
+          ⚔️ YES, ACCEPT MISSION! [P-RANK] 💖
+        </button>
+        <button id="uk-reject-btn" class="uk-btn uk-btn-red" style="font-size: 0.9rem; transition: transform 0.15s ease;">
+          DECLINE (PARRY REQUIRED)
+        </button>
+      </div>
+      <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--uk-text-muted); margin-top: 1.2rem;">
+        *TIP: Attempting to decline will trigger an automatic +PARRY and redirect back to romance.
+      </div>
+    </section>
+
+    <!-- Mission Briefing Grid -->
+    <section style="margin-top: 3.5rem;">
+      <div class="uk-badge-cyan">OPERATION ITINERARY // 4 STAGES</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2.2rem; text-transform: uppercase; color: #fff;">
+        OUR DATE BATTLEPLAN
+      </h2>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); margin-bottom: 1.5rem;">
+        Select any mission card to inspect the battle tactics and interactive tools.
+      </p>
+
+      <div class="mission-grid">
+
+        <!-- Stage 1 -->
+        <a href="mission1-ultrakill.html" class="mission-card">
+          <span class="mission-number">01</span>
+          <div>
+            <div class="mission-tag">COMBAT &amp; COACHING</div>
+            <h3 class="mission-title">ULTRAKILL LEVEL BEATING &amp; COMPETITION</h3>
+            <p class="mission-desc">
+              Sahil takes the mentor seat to teach Maddie the secrets of projectile boosting, coin ricoshots, and clearing brutal levels. Followed by a friendly cybergrind style competition!
+            </p>
+          </div>
+          <div class="mission-footer">
+            <span>TRAINING PROTOCOL</span>
+            <span>ENTER STAGE →</span>
+          </div>
+        </a>
+
+        <!-- Stage 2 -->
+        <a href="mission2-visionboard.html" class="mission-card">
+          <span class="mission-number">02</span>
+          <div>
+            <div class="mission-tag">CREATIVE FUTURE COLLAB</div>
+            <h3 class="mission-title">OUR VISION BOARD ON CANVA</h3>
+            <p class="mission-desc">
+              Curled up with our laptops building our shared future on Canva. Featuring all 9 deep questions from our last proposal, dream home &amp; car blueprints, and our personal quote vault.
+            </p>
+          </div>
+          <div class="mission-footer">
+            <span>CANVA SYNERGY</span>
+            <span>ENTER STAGE →</span>
+          </div>
+        </a>
+
+        <!-- Stage 3 -->
+        <a href="mission3-anime.html" class="mission-card">
+          <span class="mission-number">03</span>
+          <div>
+            <div class="mission-tag">FATE &amp; CHANCE</div>
+            <h3 class="mission-title">ANIME WHEEL OF JUDGEMENT</h3>
+            <p class="mission-desc">
+              An interactive spinning fate wheel deciding our anime episode: <strong>Black Clover</strong>, <strong>Cyberpunk: Edgerunners</strong>, or <strong>Dragon Ball</strong>! Spin, listen, and watch!
+            </p>
+          </div>
+          <div class="mission-footer">
+            <span>SPIN PROTOCOL</span>
+            <span>ENTER STAGE →</span>
+          </div>
+        </a>
+
+        <!-- Stage 4 -->
+        <a href="mission4-ironman.html" class="mission-card ironman-card" style="border-color: rgba(255, 208, 0, 0.4); background: rgba(25, 12, 16, 0.95);">
+          <span class="mission-number" style="color: rgba(255, 208, 0, 0.2);">04</span>
+          <div>
+            <div class="mission-tag" style="color: #ffd000;">STARK INDUSTRIES EXCLUSIVE</div>
+            <h3 class="mission-title" style="color: #ff334b;">IRON MAN 2 MOVIE NIGHT</h3>
+            <p class="mission-desc">
+              The grand finale movie night: Tony Stark style! The interface shifts entirely into holographic Stark Crimson &amp; Gold armor with Arc Reactor power.
+            </p>
+          </div>
+          <div class="mission-footer" style="color: #ffd000; border-top-color: rgba(255, 208, 0, 0.3);">
+            <span>JARVIS SYSTEM READY</span>
+            <span>ACCESS HUD →</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Couple Video Briefing -->
+    <section class="uk-panel uk-panel-red" style="margin-top: 3.5rem;">
+      <div class="uk-badge">ARCHIVED SURVEILLANCE // SPECIAL MEMORY</div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 0.5rem; color: #fff;">
+        CLASSIFIED ARCHIVE FOOTAGE
+      </h3>
+      <p style="font-family: var(--font-mono); color: var(--uk-text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+        FILE: "mom and dad's non-divorce policy.mp4" — Essential pre-date viewing.
+      </p>
+
+      <div style="max-width: 720px; margin: 0 auto; background: #000; border: 2px solid var(--uk-border-bright); box-shadow: 0 0 25px rgba(255, 0, 60, 0.25);">
+        <video controls style="width: 100%; max-height: 440px; display: block; object-fit: contain;">
+          <source src="assets/mom and dad's non-divorce policy.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+
+    <!-- Cyber Memory Photo Terminal -->
+    <section style="margin-top: 3.5rem;">
+      <div class="uk-badge-cyan">DATA LOGS // SAHIL &amp; MADDIE RECON PHOTOS</div>
+      <h3 style="font-family: var(--font-heading); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 1.2rem; color: #fff;">
+        CYBERGRIND MEMORY VAULT
+      </h3>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;">
+        <div style="position: relative; border: 1px solid var(--uk-border); overflow: hidden; aspect-ratio: 1/1; background: #000;">
+          <img src="assets/1.jpg" alt="Memory 1" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+        </div>
+        <div style="position: relative; border: 1px solid var(--uk-border); overflow: hidden; aspect-ratio: 1/1; background: #000;">
+          <img src="assets/3.jpg" alt="Memory 3" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+        </div>
+        <div style="position: relative; border: 1px solid var(--uk-border); overflow: hidden; aspect-ratio: 1/1; background: #000;">
+          <img src="assets/5.jpg" alt="Memory 5" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+        </div>
+        <div style="position: relative; border: 1px solid var(--uk-border); overflow: hidden; aspect-ratio: 1/1; background: #000;">
+          <img src="assets/7.jpg" alt="Memory 7" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+        </div>
+        <div style="position: relative; border: 1px solid var(--uk-border); overflow: hidden; aspect-ratio: 1/1; background: #000;">
+          <img src="assets/9.jpg" alt="Memory 9" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+        </div>
+        <div style="position: relative; border: 1px solid var(--uk-border); overflow: hidden; aspect-ratio: 1/1; background: #000;">
+          <img src="assets/holding.jpg" alt="Holding hands" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2);transition:transform 0.3s;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="margin-top: 5rem; text-align: center; font-family: var(--font-mono); font-size: 0.8rem; color: var(--uk-text-muted); border-top: 1px solid var(--uk-border); padding-top: 2rem;">
+      <p>TERMINAL SYSTEM // CODED WITH LOVE FOR SAHIL FROM MADDIE</p>
+      <p style="color: var(--uk-red); margin-top: 0.3rem;">WAR WITHOUT REASON... EXCEPT FOR THIS SPECIAL DATE.</p>
+    </footer>
+
+  </main>
+
+  <!-- P-Rank Victory Modal -->
+  <div id="uk-p-rank-modal" class="uk-modal-overlay">
+    <div class="uk-modal-box">
+      <div class="p-rank-container" style="margin: 0 auto 1.5rem;">
+        <span class="p-rank-letter">P</span>
+      </div>
+      <div class="uk-badge-gold">PERFECT RANK ACHIEVED</div>
+      <h2 style="font-family: var(--font-heading); font-size: 2.5rem; text-transform: uppercase; color: #fff; margin-bottom: 1rem;">
+        MISSION ACCEPTED! 🎉💖
+      </h2>
+      <p style="font-family: var(--font-display); font-size: 1.1rem; color: #e0e7ff; line-height: 1.7; margin-bottom: 2rem;">
+        Sahil, I knew you'd say yes! 🥰<br />
+        Get your coins ready, sharpen your parry timing, bring your best future dreams for our Canva vision board, get hyped for the anime wheel spin, and prepare for the ultimate Iron Man 2 cuddle session! I love you so much and can't wait for our date! 💌
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <button id="close-prank-modal" class="uk-btn uk-btn-gold">
+          HELL YEAH! CONTINUE TO MISSION 1 →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sounds.js"></script>
+  <script src="js/ultrakill.js"></script>
+  <script>
+    // Direct modal click to mission 1
+    document.getElementById('close-prank-modal').addEventListener('click', () => {
+      window.location.href = 'mission1-ultrakill.html';
+    });
+  </script>
+</body>
+</html>
